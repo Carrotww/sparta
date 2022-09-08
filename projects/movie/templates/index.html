@@ -97,6 +97,7 @@
                 url: '/movie',
                 data: {},
                 success: function (response) {
+                    console.log(response)
                     let rows = response['movies']
                     for (let i = 0; i < rows.length; i++) {
                         let comment = rows[i]['comment']
