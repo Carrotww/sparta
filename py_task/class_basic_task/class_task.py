@@ -70,10 +70,3 @@ test.set_profile({
     "phone": "01012341234",
     "email": "python@sparta.com",
 })
-
-print(test.get_name())
-print(test.get_gender())
-print(test.get_birthday())
-print(test.get_age())
-print(test.get_phone())
-print(test.get_email())
