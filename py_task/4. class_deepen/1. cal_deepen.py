@@ -31,7 +31,6 @@ class Profile:
     
     def Profile_filter(self):
         return [x for x in filter(lambda x: x[2] >= 20, self.people)]
-    
 
 people = [
     ("Blake Howell", "Jamaica", 18, "aw@jul.bw"),
