@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import UserModel
 from django.http import HttpResponse
+from django.contrib.auth import get_user_model # 사용자가 데이터베이스 안에 있는지 검사하는 함수
+from django.contrib import auth
 
 # Create your views here.
 def sign_up_view(request):
@@ -16,23 +18,26 @@ def sign_up_view(request):
         if password != password2:
             return render(request, 'user/signup.html')
         else:
-            new_user = UserModel()
-            new_user.username = username
-            new_user.password = password
-            new_user.bio = bio
-            new_user.save()
-
-        return redirect('/sign-in')
+            exist_user = get_user_model().objects.filter(username=username)
+            if exist_user:
+                return render(request, 'user/signup.html')
+            else:
+                UserModel.objects.create_user(username=username, password=password, bio=bio)
+                return redirect('/sign-in')
 
 def sign_in_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
 
-        me = UserModel.objects.get(username=username)
-        if me.password == password:
-            request.session['user'].me.username
-            return HttpResponse('로그인 성공')
+        me = auth.authenticate(request, username=username, password=password)
+        # password를 암호화 했기 때문에 그냥 == 으로 비교하는 것이 아닌 복호화 해서 비교해야함 Django기능
+        # me = UserModel.objects.get(username=username)
+        # if me.password == password:
+        if me is not None: # me에서 모든 기록을 들고 오기 때문에 있는지 없는지만 비교를 하면 됨
+            # request.session['user'] = me.username
+            auth.login(request, me)
+            return redirect('/') # / 라는 기본 페이지로 감 -> tweet.app에 '' 가 기본 url
         else:
             return redirect('/sign-in')
 

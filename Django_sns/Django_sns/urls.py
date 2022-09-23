@@ -22,4 +22,5 @@ urlpatterns = [
     path('test/', views.base_response, name='first_test'),
     path('first/', views.first_view, name='first_view'),
     path('', include('user.urls')), # user의 urls 파일을 연결을 해주는 것 include 모듈 필요
+    path('', include('tweet.urls')),
 ]
