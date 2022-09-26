@@ -3,6 +3,7 @@ from .models import UserModel
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model # 사용자가 데이터베이스 안에 있는지 검사하는 함수
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def sign_up_view(request):
@@ -42,4 +43,14 @@ def sign_in_view(request):
             return redirect('/sign-in')
 
     elif request.method == 'GET':
-        return render(request, 'user/signin.html')
+        user = request.user.is_authenticated
+        if user:
+            return redirect('/')
+        else:
+            return render(request, 'user/signin.html')
+
+@login_required # 사용자가 로그인이 되어있어야만 접근 가능한 함수
+def logout(request):
+    auth.logout(request)
+
+    return redirect('/')
