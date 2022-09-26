@@ -1,3 +1,4 @@
+from http.client import REQUEST_URI_TOO_LONG
 from django.shortcuts import render, redirect
 from .models import TweetModel
 from .models import TweetComment
@@ -26,12 +27,23 @@ def tweet(request):
         
     elif request.method == 'POST':
         user = request.user # 모든 사용자 정보를 가져옴
-        my_tweet = TweetModel() # 인스턴스 생성
-        my_tweet.author = user # user를 넣어주고
-        my_tweet.content = request.POST.get('my-content', '')
-        # post로 받아온 content를 가져옴
-        my_tweet.save()
-        return redirect('/tweet')
+        content = request.POST.get('my-content', '')
+
+        if content == '':
+            all_tweet = TweetModel.objects.all().order_by('-created_at')
+            return render(request, 'tweet/home.html', {'error':'공백 입니다.', 'tweet':all_tweet})
+        else:
+            my_tweet = TweetModel.objects.create(author=user, content=content)
+            my_tweet.save()
+            return redirect('/tweet')
+        
+        # 기존 코드
+        # my_tweet = TweetModel() # 인스턴스 생성
+        # my_tweet.author = user # user를 넣어주고
+        # my_tweet.content = request.POST.get('my-content', '')
+        # # post로 받아 온 content를 가져옴
+        # my_tweet.save()
+        # return redirect('/tweet')
 
 @login_required
 def delete_tweet(request, id):
