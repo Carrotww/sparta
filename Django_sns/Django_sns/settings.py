@@ -25,9 +25,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = "django-insecure-^@7n8-&$kd&1ri4y0ihkokbr+%h89n6j3$a72-a^lyo&+*&7o-"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -42,7 +42,12 @@ INSTALLED_APPS = [
     'tweet',
     'user',
     'restaurant',
+    'taggit.apps.TaggitAppConfig',
+    'taggit_templatetags2',
 ]
+
+TAGGIT_CASE_INSENSITIVE = True
+TAGGIT_LIMIT = 50
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
